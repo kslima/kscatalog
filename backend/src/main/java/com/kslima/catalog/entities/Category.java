@@ -1,5 +1,7 @@
 package com.kslima.catalog.entities;
 
+import com.kslima.catalog.dto.CategoryDTO;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
@@ -22,6 +24,10 @@ public class Category implements Serializable {
     public Category(Long id, String name) {
         this.id = id;
         this.name = name;
+    }
+
+    public Category(CategoryDTO categoryDTO) {
+        this.name = categoryDTO.getName();
     }
 
     public Long getId() {

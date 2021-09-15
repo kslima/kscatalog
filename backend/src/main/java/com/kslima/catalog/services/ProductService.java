@@ -2,6 +2,7 @@ package com.kslima.catalog.services;
 
 import com.kslima.catalog.dto.ProductDTO;
 import com.kslima.catalog.entities.Product;
+import com.kslima.catalog.repositories.CategoryRepository;
 import com.kslima.catalog.repositories.ProductRepository;
 import com.kslima.catalog.services.exceptions.DatabaseException;
 import com.kslima.catalog.services.exceptions.ResourceNotFoundException;
@@ -22,6 +23,9 @@ public class ProductService {
     @Autowired
     private ProductRepository repository;
 
+    @Autowired
+    private CategoryRepository categoryRepository;
+
     @Transactional(readOnly = true)
     public Page<ProductDTO> findAllPaged(PageRequest pageRequest) {
         return repository.findAll(pageRequest)
@@ -38,6 +42,7 @@ public class ProductService {
     @Transactional()
     public ProductDTO insert(ProductDTO dto) {
         Product entity = new Product();
+        copyDtoToEntity(dto, entity);
         repository.save(entity);
         return new ProductDTO(entity);
     }
@@ -46,11 +51,10 @@ public class ProductService {
     public ProductDTO update(Long id, ProductDTO dto) {
         try {
             Product entity = repository.getOne(id);
-            //entity.setName(dto.getName());
+            copyDtoToEntity(dto, entity);
             entity = repository.save(entity);
             return new ProductDTO(entity);
-        }
-        catch (EntityNotFoundException e) {
+        } catch (EntityNotFoundException e) {
             throw new ResourceNotFoundException("Id not found " + id);
         }
     }
@@ -58,14 +62,25 @@ public class ProductService {
     public void delete(Long id) {
         try {
             repository.deleteById(id);
-        }
-        catch (EmptyResultDataAccessException e) {
+        } catch (EmptyResultDataAccessException e) {
             throw new ResourceNotFoundException("Id not found " + id);
-        }
-        catch (DataIntegrityViolationException e) {
+        } catch (DataIntegrityViolationException e) {
             throw new DatabaseException("Integrity violation");
         }
 
+    }
+
+    private void copyDtoToEntity(ProductDTO dto, Product entity) {
+        entity.setName(dto.getName());
+        entity.setDescription(dto.getDescription());
+        entity.setDate(dto.getDate());
+        entity.setImgUrl(dto.getImgUrl());
+        entity.setPrice(dto.getPrice());
+
+        entity.getCategories().clear();
+
+        dto.getCategories().forEach(catDto -> entity.getCategories()
+                .add(categoryRepository.getOne(catDto.getId())));
     }
 
 }

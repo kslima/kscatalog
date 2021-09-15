@@ -1,9 +1,7 @@
 package com.kslima.catalog.resources;
 
 import com.kslima.catalog.dto.CategoryDTO;
-import com.kslima.catalog.entities.Category;
 import com.kslima.catalog.services.CategoryService;
-import com.kslima.catalog.services.exceptions.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -40,5 +38,11 @@ public class CategoryResources {
                 .toUri();
 
         return ResponseEntity.created(uri).body(dto);
+    }
+
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<CategoryDTO> update(@PathVariable Long id, @RequestBody CategoryDTO dto) {
+        dto = categoryService.update(id, dto);
+        return ResponseEntity.ok().body(dto);
     }
 }

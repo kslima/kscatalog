@@ -11,6 +11,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,8 +28,8 @@ public class ProductService {
     private CategoryRepository categoryRepository;
 
     @Transactional(readOnly = true)
-    public Page<ProductDTO> findAllPaged(PageRequest pageRequest) {
-        return repository.findAll(pageRequest)
+    public Page<ProductDTO> findAllPaged(Pageable pageable) {
+        return repository.findAll(pageable)
                 .map(ProductDTO::new);
     }
 
@@ -39,7 +40,7 @@ public class ProductService {
                 .orElseThrow(() -> new ResourceNotFoundException("Entity not found"));
     }
 
-    @Transactional()
+    @Transactional
     public ProductDTO insert(ProductDTO dto) {
         Product entity = new Product();
         copyDtoToEntity(dto, entity);

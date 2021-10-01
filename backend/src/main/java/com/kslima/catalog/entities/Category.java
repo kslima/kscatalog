@@ -1,11 +1,11 @@
 package com.kslima.catalog.entities;
 
-import com.kslima.catalog.dto.CategoryDTO;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "tb_category")
@@ -22,6 +22,9 @@ public class Category implements Serializable {
 
     @Column(columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")
     private Instant updatedAt;
+
+    @ManyToMany(mappedBy = "categories")
+    private final Set<Product> products = new HashSet<>();
 
     public Category() {
 
@@ -54,6 +57,10 @@ public class Category implements Serializable {
 
     public Instant getUpdatedAt() {
         return updatedAt;
+    }
+
+    public Set<Product> getProducts() {
+        return products;
     }
 
     @PrePersist

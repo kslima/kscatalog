@@ -2,6 +2,7 @@ package com.kslima.catalog.resources;
 
 import com.kslima.catalog.dto.UserDTO;
 import com.kslima.catalog.dto.UserInsertDTO;
+import com.kslima.catalog.dto.UserUpdateDTO;
 import com.kslima.catalog.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -43,7 +44,7 @@ public class UserResources {
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<UserDTO> update(@PathVariable Long id, @Valid @RequestBody UserDTO dto) {
+    public ResponseEntity<UserUpdateDTO> update(@PathVariable Long id, @Valid @RequestBody UserUpdateDTO dto) {
         dto = UserService.update(id, dto);
         return ResponseEntity.ok().body(dto);
     }

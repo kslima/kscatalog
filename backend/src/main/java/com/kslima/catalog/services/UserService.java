@@ -2,6 +2,7 @@ package com.kslima.catalog.services;
 
 import com.kslima.catalog.dto.UserDTO;
 import com.kslima.catalog.dto.UserInsertDTO;
+import com.kslima.catalog.dto.UserUpdateDTO;
 import com.kslima.catalog.entities.User;
 import com.kslima.catalog.repositories.RoleRepository;
 import com.kslima.catalog.repositories.UserRepository;
@@ -54,12 +55,12 @@ public class UserService {
     }
 
     @Transactional
-    public UserDTO update(Long id, UserDTO dto) {
+    public UserUpdateDTO update(Long id, UserUpdateDTO dto) {
         try {
             User entity = repository.getOne(id);
             copyDtoToEntity(dto, entity);
             entity = repository.save(entity);
-            return new UserDTO(entity);
+            return new UserUpdateDTO(entity);
         } catch (EntityNotFoundException e) {
             throw new ResourceNotFoundException("Id not found " + id);
         }
